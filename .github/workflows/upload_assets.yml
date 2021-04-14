@@ -1,0 +1,30 @@
+on:
+  release:
+    types: [created]
+
+name: Upload release assets after release is created
+jobs:
+  build:
+    name: create assets
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: install platformio
+      run: |
+        pip install platformio==5.0.3
+
+    - name: build firmware
+      run: |
+        export PLATFORMIO_BUILD_DIR=$HOME/build
+        make ci
+        mkdir firmware
+        cp $PLATFORMIO_BUILD_DIR/pro16MHzatmega328/firmware.hex firmware/
+
+    - name: Upload release assets
+      uses: skx/github-action-publish-binaries@c881a3f8ffb80b684f367660178d38ceabc065c2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        args: './firmware/*'

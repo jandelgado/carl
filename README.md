@@ -1,5 +1,7 @@
 # Carl music box
 
+[![build firmware](https://github.com/jandelgado/carl/actions/workflows/build.yml/badge.svg)](https://github.com/jandelgado/carl/actions/workflows/build.yml)
+
 This is the firmware repository for the Carl music box. Details will follow
 shortly.
 
