@@ -1,0 +1,44 @@
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+name: build firmware
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout code
+      uses: actions/checkout@v2
+
+    - name: linter
+      run: |
+        pip install cpplint
+        make lint
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout code
+      uses: actions/checkout@v2
+
+    - name: install platformio
+      run: |
+        pip install platformio==5.0.3
+
+    - name: build firmware
+      run: |
+        export PLATFORMIO_BUILD_DIR=$HOME/build
+        make ci
+        mkdir firmware
+        cp $PLATFORMIO_BUILD_DIR/pro16MHzatmega328/firmware.hex firmware/
+
+    - name: upload artifacts
+      uses: actions/upload-artifact@master
+      with:
+        name: firmware
+        path: firmware/
+
