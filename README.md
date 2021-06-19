@@ -44,7 +44,7 @@ IDE.
 
 ### PlatformIO
 
-Check out the repository on your computer. Run `make upload` to build and
+Check out the repository on your computer. Run `cd carl && make upload` to build and
 upload the firmware.
 
 ## Author 

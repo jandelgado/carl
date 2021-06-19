@@ -11,7 +11,7 @@ void setup() {
     Serial.begin(9600);
 }
 
-void loop(){
+void loop() {
     Serial.println(analogRead(PIN_BUTTONS));
     delay(50);
 }
