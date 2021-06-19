@@ -5,7 +5,7 @@
 This is the firmware repository for the Carl music box. Details will follow
 shortly.
 
-![carl music box](.images/carl.jpg)
+<img src=".images/carl.jpg" width=400 alt="carl music box">
 
 <!-- vim-markdown-toc GFM -->
 
@@ -29,10 +29,10 @@ Select `Arduino Pro or Pro Mini` as the target board under `Tools` > `Board` >
 `Arduino AVR Boards`. The processor used is an `Atmega328P 5V 16MHz`.
 
 Install the needed libraries using `Sketch` > `Include Library` > `Manage Libraries...`:
-* AnalogMultiButton
-* DFPlayerMini
-* JLed
-* log4arduino
+* AnalogMultiButton (1.0.0)
+* DFPlayerMini (1.0.5)
+* JLed (4.7.0)
+* log4arduino (1.0.0)
 
 Alternatively, install the libraries with this command:
 ```

@@ -7,12 +7,12 @@ all: phony
 	pio run
 
 lint: phony
-	cpplint --root=src --extensions=cpp,h,ino --filter=-build/include_subdir \
-		$(shell find src  \( ! -regex '.*/\..*' \) \
+	cpplint --root=carl --extensions=cpp,h,ino --filter=-build/include_subdir \
+		$(shell find carl  \( ! -regex '.*/\..*' \) \
 	      -type f -a \( -name "*\.cpp" -o -name "*\.h" -o -name "*\.ino" \) )
 
 ci: phony
-	pio ci --project-conf platformio.ini src
+	pio ci --project-conf platformio.ini carl
 
 clean: phony
 	pio run --target clean
