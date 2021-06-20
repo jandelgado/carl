@@ -17,7 +17,9 @@ jobs:
     - name: linter
       run: |
         pip install cpplint
-        make lint
+        for project in carl calibrate; do
+          make -C "$project" lint
+        done
 
   build:
     runs-on: ubuntu-latest
@@ -27,16 +29,21 @@ jobs:
 
     - name: install platformio
       run: |
-        pip install platformio==5.0.3
+        pip install platformio==5.1.1
 
-    - name: build firmware
+    - name: build calibrate firmware
       run: |
-        export PLATFORMIO_BUILD_DIR=$HOME/build
-        make ci
-        mkdir firmware
+        export PLATFORMIO_BUILD_DIR=$HOME/build-calibrate
+        make -C calibrate ci
+
+    - name: build carl firmware
+      run: |
+        export PLATFORMIO_BUILD_DIR=$HOME/build-carl
+        make -C carl ci
+        mkdir -p firmware
         cp $PLATFORMIO_BUILD_DIR/pro16MHzatmega328/firmware.hex firmware/
 
-    - name: upload artifacts
+    - name: upload carl artifacts
       uses: actions/upload-artifact@master
       with:
         name: firmware
