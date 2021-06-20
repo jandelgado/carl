@@ -19,9 +19,7 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 //
-#ifndef CARL_H_
-#define CARL_H_
-
+#pragma once
 #include <Arduino.h>
 
 // Hardware configuration - where stuff is connected / Konfiguration der
@@ -33,5 +31,3 @@ constexpr uint8_t PIN_RX = 9;
 constexpr uint8_t PIN_TX = 8;
 constexpr uint8_t PIN_LED = 10;
 constexpr uint8_t PIN_DFPLAYER_BUSY = 12;
-
-#endif  // CARL_H_

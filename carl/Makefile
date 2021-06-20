@@ -16,8 +16,14 @@ ci: phony
 clean: phony
 	pio run --target clean
 
-upload: phony
-	pio run --target upload
+upload-makuna: phony
+	pio run --target upload --environment pro16MHzatmega328-makuna
+
+upload-dfrobot: phony
+	pio run --target upload --environment pro16MHzatmega328-dfrobot
+
+upload-powerbroker: phony
+	pio run --target upload --environment pro16MHzatmega328-powerbroker
 
 monitor: phony
 	pio device monitor 

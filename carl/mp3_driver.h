@@ -20,21 +20,32 @@
 // IN THE SOFTWARE.
 //
 #pragma once
-#include <Arduino.h>
+#include <stdint.h>
 
-class VolumeKnob {
+// abstracts the actual mp3 hardware used so that we can use different
+// libraries or modules without changing application code.
+class Mp3Driver {
  public:
-  VolumeKnob() = delete;
-  explicit VolumeKnob(uint8_t pin_poti, uint8_t pin_power);
-
-  // reads volume and returns value in range [0..volume_max]
-  uint16_t readVolume(uint16_t volume_max);
-
- private:
-  static constexpr float kAlpha = 0.6;
-  static constexpr auto kSampleTimeMs = 100;
-  uint16_t last_reading_ = 0;
-  uint8_t pin_poti_;
-  uint8_t pin_power_;
-  uint32_t time_last_ = 0;
+    // start playback
+    virtual void start() = 0;
+    // pause playback
+    virtual void pause() = 0;
+    // stop playback
+    virtual void stop() = 0;
+    // play song from given folder.
+    virtual void playSongFromFolder(uint8_t folder, uint16_t song) = 0;
+    // return maximum allowed volume
+    virtual uint8_t getMaxVolume() const = 0;
+    // set volume. volume is in range [0..getMaxVolume()]
+    virtual void setVolume(uint8_t vol) = 0;
+    // set the equalizer mode. mode is in range [0..getNumEqModes()-1]
+    virtual void setEqMode(uint8_t mode) = 0;
+    // return numer of equalizer modes
+    virtual uint8_t getNumEqModes() const = 0;
+    // returns number of files found in the given folder. -1 if none or error
+    virtual int16_t getFileCountInFolder(uint8_t folder) = 0;
+    // return true if the player is currently playing, else false.
+    virtual bool isBusy() = 0;
+    // call periodically from the main loop to update the object
+    virtual void update() = 0;
 };

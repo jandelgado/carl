@@ -26,11 +26,13 @@ void Mp3Module::update() {
   const auto event = consumeEvent();
   const auto busy = isBusy();
 
+  mp3_driver_->update();
+
   switch (state_) {
     case eState::PLAYING:
       if (event == eEvent::STOP) {
         LOG("m stop");
-        df_player_.stop();
+        mp3_driver_->stop();
         cur_song_ = 0;
         state_ = eState::STOPPED;
         return;
@@ -45,7 +47,7 @@ void Mp3Module::update() {
 
       if (event == eEvent::PLAYPAUSE) {
         LOG("m pause");
-        df_player_.pause();
+        mp3_driver_->pause();
         state_ = eState::PAUSED;
         return;
       }
@@ -102,7 +104,7 @@ void Mp3Module::update() {
     case eState::PAUSED:
       if (event == eEvent::PLAYPAUSE) {
         LOG("m pause > play");
-        df_player_.start();
+        mp3_driver_->start();
         state_ = eState::START_PLAYING;
         return;
       }
@@ -138,8 +140,7 @@ void Mp3Module::update() {
 
 // returns true if the player (hardware) is currently playing, otherwise false.
 bool Mp3Module::isBusy() const {
-  // is LOW while DFPlayerMini is busy
-  return digitalRead(busy_pin_) == LOW;
+    return mp3_driver_->isBusy();
 }
 
 // returns true if the player is playing the current song at least for
@@ -187,7 +188,7 @@ void Mp3Module::playSongFromFolder(uint8_t folder, uint16_t song) {
   LOG("play s=%d, f=%d (n=%d)", song, folder, folder_count_[folder]);
   cur_folder_ = folder;
   cur_song_ = song;
-  df_player_.playLargeFolder(folder + 1, song + 1);
+  mp3_driver_->playSongFromFolder(folder + 1, song + 1);
 }
 
 // Randomly select a song from the given folder
@@ -203,19 +204,19 @@ Mp3Module::SongInfo Mp3Module::getRandomSongFromFolder(uint8_t folder) const {
 
 // set the players volume
 void Mp3Module::setVolume(uint8_t volume) {
-  LOG("m set vol to %d", volume);
-  df_player_.volume(volume);
+  LOG("m set vol to %d", volume);   // TODO(jd) max volume
+  mp3_driver_->setVolume(volume);
 }
 
-// set the EQ (0..5)
+// set the EQ mode
 void Mp3Module::setEqMode(uint8_t mode) {
-  if (mode > 5) return;
+  if (mode > mp3_driver_->getNumEqModes()) return;
   LOG("m set eq to %d", mode);
   eq_mode_ = mode;
-  df_player_.EQ(eq_mode_);
+  mp3_driver_->setEqMode(eq_mode_);
 }
 
 void Mp3Module::nextEqMode() {
-  const auto new_mode = (eq_mode_ + 1) % 6;
+  const auto new_mode = (eq_mode_ + 1) % (mp3_driver_->getNumEqModes());
   setEqMode(new_mode);
 }

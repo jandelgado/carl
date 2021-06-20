@@ -41,7 +41,7 @@ jobs:
         export PLATFORMIO_BUILD_DIR=$HOME/build-carl
         make -C carl ci
         mkdir -p firmware
-        cp $PLATFORMIO_BUILD_DIR/pro16MHzatmega328/firmware.hex firmware/
+        cp $PLATFORMIO_BUILD_DIR/pro16MHzatmega328-makuna/firmware.hex firmware/
 
     - name: upload carl artifacts
       uses: actions/upload-artifact@master
