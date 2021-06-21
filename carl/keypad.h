@@ -25,38 +25,38 @@
 
 class Keypad {
  public:
-  explicit Keypad(int pin);
-  void update();
+    explicit Keypad(int pin);
+    void update();
 
-  // return logical key event of last key press or KeyEvent::kNone if no 
-  // key was pressed
-  KeyEvent::Type getKeyEvent();
+    // return logical key event of last key press or KeyEvent::kNone if no
+    // key was pressed
+    KeyEvent::Type getKeyEvent();
 
  private:
-  // ** ADD YOUR OWN VALUES HERE / HIER EIGENE WERTE EINTRAGEN **
-  //
-  // The 12 buttons are connected through one analog input using a resistor
-  // network. The actual values depend on the resistor used in the circuit.
-  // The values therefore need to be determined by a simple script:
-  //    loop(){Serial.println(analogRead(PIN_BUTTONS);}
-  //
-  // We use a slightly modified circuit, so that current will flow only when a
-  // button is pressed (i.e. VCC and GND reversed).  We have to use two tricks
-  // to use the AnalogButtons library with our button circuit to work without
-  // modifications 1) insert dummy button (100) to catch 0V case  when no
-  // button is pressed 2) set analog resoultion to 1100 to detect the 5V (1023)
-  // case for button #12.
-  //
-  static constexpr int button_values_[] = {
-      100, /* dummy button 0, will be ignored */
-      323, 344, 369, 398, 431, 470, 517, 574, 645, 736, 857, 1023};
+    // ** ADD YOUR OWN VALUES HERE / HIER EIGENE WERTE EINTRAGEN **
+    //
+    // The 12 buttons are connected through one analog input using a resistor
+    // network. The actual values depend on the resistor used in the circuit.
+    // The values therefore need to be determined by a simple script:
+    //    loop(){Serial.println(analogRead(PIN_BUTTONS);}
+    //
+    // We use a slightly modified circuit, so that current will flow only when a
+    // button is pressed (i.e. VCC and GND reversed).  We have to use two tricks
+    // to use the AnalogButtons library with our button circuit to work without
+    // modifications 1) insert dummy button (100) to catch 0V case  when no
+    // button is pressed 2) set analog resoultion to 1100 to detect the 5V
+    // (1023) case for button #12.
+    //
+    static constexpr int button_values_[] = {
+        100, /* dummy button 0, will be ignored */
+        323, 344, 369, 398, 431, 470, 517, 574, 645, 736, 857, 1023};
 
-  constexpr static uint16_t kAnalogResolution = 1100;
-  constexpr static uint16_t kDebounceDurationMs = 20;
+    constexpr static uint16_t kAnalogResolution = 1100;
+    constexpr static uint16_t kDebounceDurationMs = 20;
 
-  // time [ms] for long/short keypresses.
-  constexpr static uint16_t kDurationLongPressMs = 2000;
-  constexpr static uint16_t kDurationShortPressMs = 500;
+    // time [ms] for long/short keypresses.
+    constexpr static uint16_t kDurationLongPressMs = 2000;
+    constexpr static uint16_t kDurationShortPressMs = 500;
 
-  AnalogMultiButton buttons_;
+    AnalogMultiButton buttons_;
 };

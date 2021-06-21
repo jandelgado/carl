@@ -40,4 +40,4 @@ enum Type : int {
     kFolder9,
     kConfigMode,
 };
-}
+}  // namespace KeyEvent
