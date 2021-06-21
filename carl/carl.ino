@@ -35,7 +35,7 @@
 Player* player_;
 
 /*
- * startup: initialize serial port and player, play greeting jingle.
+ * startup: initialize serial port and player
  */
 void setup() {
     Serial.begin(9600);

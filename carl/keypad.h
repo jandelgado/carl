@@ -21,28 +21,17 @@
 //
 #pragma once
 #include <AnalogMultiButton.h>
-
-// Mapping of logical keycode to values returned by AnalogMutliButton
-enum KeyCode : int {
-  kPlayPause = 12,
-  kNext = 2,
-  kPrev = 1,
-  kFolder1 = 9,
-  kFolder2 = 10,
-  kFolder3 = 11,
-  kFolder4 = 8,
-  kFolder5 = 7,
-  kFolder6 = 6,
-  kFolder7 = 3,
-  kFolder8 = 4,
-  kFolder9 = 5,
-};
+#include "key_events.h"
 
 class Keypad {
  public:
   explicit Keypad(int pin);
   void update();
 
+  // return logical key event of last key press or KeyEvent::kNone if no 
+  // key was pressed
+  KeyEvent::Type getKeyEvent();
+/*
   int getIndexOfPressedPlaylistButton();
   bool isStopPressed();
   bool isPlayPausePressed();
@@ -50,7 +39,7 @@ class Keypad {
   bool isPrevPressed();
   bool isEnterConfigModePressed();
   bool onPressed(KeyCode button);
-
+*/
  private:
   // ** ADD YOUR OWN VALUES HERE / HIER EIGENE WERTE EINTRAGEN **
   //
