@@ -19,11 +19,8 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 //
-#ifndef LOG_H_
-#define LOG_H_
-
+#pragma once
 #ifndef NO_LOGGING
 #define ENABLE_LOG4ARDUINO  // comment out to disable logging
 #endif
 #include <log4arduino.h>
-#endif  // LOG_H_

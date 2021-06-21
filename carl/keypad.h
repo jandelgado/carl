@@ -19,9 +19,7 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 //
-#ifndef KEYPAD_H_
-#define KEYPAD_H_
-
+#pragma once
 #include <AnalogMultiButton.h>
 
 // Mapping of logical keycode to values returned by AnalogMutliButton
@@ -81,5 +79,3 @@ class Keypad {
 
   AnalogMultiButton buttons_;
 };
-
-#endif  //  KEYPAD_H_

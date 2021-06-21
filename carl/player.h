@@ -19,9 +19,7 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 //
-#ifndef PLAYER_H_
-#define PLAYER_H_
-
+#pragma once
 #include <Arduino.h>
 #include <jled.h>
 #include "keypad.h"     // NOLINT
@@ -66,5 +64,3 @@ class Player {
   uint8_t last_volume_ = 0;
   uint32_t start_time_jingle_;
 };
-
-#endif  // PLAYER_H_
