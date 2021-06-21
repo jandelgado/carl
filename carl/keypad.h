@@ -31,15 +31,7 @@ class Keypad {
   // return logical key event of last key press or KeyEvent::kNone if no 
   // key was pressed
   KeyEvent::Type getKeyEvent();
-/*
-  int getIndexOfPressedPlaylistButton();
-  bool isStopPressed();
-  bool isPlayPausePressed();
-  bool isNextPressed();
-  bool isPrevPressed();
-  bool isEnterConfigModePressed();
-  bool onPressed(KeyCode button);
-*/
+
  private:
   // ** ADD YOUR OWN VALUES HERE / HIER EIGENE WERTE EINTRAGEN **
   //
