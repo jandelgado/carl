@@ -19,46 +19,29 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 //
-#include <AnalogMultiButton.h>
-#include <SoftwareSerial.h>
-#include <jled.h>
+#pragma once
+#include "key_events.h"
+#include "key_event_source.h"
 
-#include "carl.h"
-#include "keypad.h"
-#include "log.h"
-#include "mp3_driver.h"
-#include "mp3_driver_factory.h"
-#include "mp3module.h"
-#include "player.h"
-#include "virtual_keypad.h"
-#include "volume.h"
+// the virtual keypad reads from a serial port and translates charcters
+// into key events. The virtual keypad is chained to another KeyEventSource
+// which is qeueried when the virtual keyboard has no event.
+class VirtualKeypad : public KeyEventSource {
+ public:
+    VirtualKeypad(Stream* serial, KeyEventSource* next);
 
-Player* player_;
+    void update() override;
 
-/*
- * startup: wire the components of the player
- */
-void setup() {
-    Serial.begin(9600);
-    LOG_INIT(&Serial);
-    LOG("carl starting.");
-
-    // DFPlayerMini module and Arduino communicate through software serial iface
-    auto mp3serial = new SoftwareSerial(PIN_RX, PIN_TX);
-    auto mp3driver = new_mp3_driver(mp3serial, PIN_DFPLAYER_BUSY);
-    auto mp3module = new Mp3Module(mp3driver, Mp3Module::ePlayMode::REPEAT);
-    auto status_led = new JLed(PIN_LED);
-    status_led->LowActive();
-    auto keypad = new Keypad(PIN_BUTTONS);
-    auto virtual_keypad = new VirtualKeypad(&Serial, keypad);
-    auto volume_knob = new VolumeKnob(PIN_VOLUME, PIN_VOLUME_POWER);
-    player_ = new Player(mp3module, virtual_keypad, volume_knob, status_led);
-
-    for (auto i = 0; i < 100; i++) {
-        randomSeed(analogRead(0));
+    // return logical key event of last key press or KeyEvent::kNone if no
+    // key was pressed
+    KeyEvent::Type getKeyEvent() override {
+        auto val = last_;
+        last_ = KeyEvent::kNone;
+        return val != KeyEvent::kNone ? val : next_->getKeyEvent();
     }
-}
 
-void loop() {
-    player_->update();
-}
+ private:
+    Stream* serial_;
+    KeyEventSource* next_;
+    KeyEvent::Type last_;
+};

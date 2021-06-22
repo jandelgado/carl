@@ -19,46 +19,16 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 //
-#include <AnalogMultiButton.h>
-#include <SoftwareSerial.h>
-#include <jled.h>
+#pragma once
+#include "key_events.h"
 
-#include "carl.h"
-#include "keypad.h"
-#include "log.h"
-#include "mp3_driver.h"
-#include "mp3_driver_factory.h"
-#include "mp3module.h"
-#include "player.h"
-#include "virtual_keypad.h"
-#include "volume.h"
+// a KeyEventSource generates KeyEvents used to control the player, like the
+// Keypad or the virtual keypad.
+class KeyEventSource {
+ public:
+    virtual void update() = 0;
 
-Player* player_;
-
-/*
- * startup: wire the components of the player
- */
-void setup() {
-    Serial.begin(9600);
-    LOG_INIT(&Serial);
-    LOG("carl starting.");
-
-    // DFPlayerMini module and Arduino communicate through software serial iface
-    auto mp3serial = new SoftwareSerial(PIN_RX, PIN_TX);
-    auto mp3driver = new_mp3_driver(mp3serial, PIN_DFPLAYER_BUSY);
-    auto mp3module = new Mp3Module(mp3driver, Mp3Module::ePlayMode::REPEAT);
-    auto status_led = new JLed(PIN_LED);
-    status_led->LowActive();
-    auto keypad = new Keypad(PIN_BUTTONS);
-    auto virtual_keypad = new VirtualKeypad(&Serial, keypad);
-    auto volume_knob = new VolumeKnob(PIN_VOLUME, PIN_VOLUME_POWER);
-    player_ = new Player(mp3module, virtual_keypad, volume_knob, status_led);
-
-    for (auto i = 0; i < 100; i++) {
-        randomSeed(analogRead(0));
-    }
-}
-
-void loop() {
-    player_->update();
-}
+    // return logical key event of last key press or KeyEvent::kNone if no
+    // key was pressed
+    virtual KeyEvent::Type getKeyEvent() = 0;
+};
