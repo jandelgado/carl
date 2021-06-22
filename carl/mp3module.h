@@ -45,33 +45,7 @@ class Mp3Module {
 
     Mp3Module() = delete;
 
-    // The DFPlayer module can be connected to anything satisfying the Stream
-    // interface.  Since common base class of serial ports Stream does not
-    // have the begin(baud_rate) method, we us a templated ctor here so we call
-    // the begin() method of the provided serial port here, regardless of actual
-    // type. This way, we keep everythng together and don't forget
-    // initialization.
-    Mp3Module(Mp3Driver* mp3_driver, ePlayMode skip_mode)
-        : mp3_driver_(mp3_driver), skip_mode_(skip_mode) {
-        // get number of files per folder so we can later browse the folders.
-        memset(folder_count_, 0, sizeof(uint16_t) * kMaxFolders);
-        for (auto i = 0; i < kMaxFolders; i++) {
-            // some module return -1 even if there are files in the folder.
-            // in this case we try to read again
-            for (auto curtry = 1; curtry <= kMaxFolderReadTries; curtry++) {
-                const auto count = mp3_driver_->getFileCountInFolder(i + 1);
-                LOG("  folder %d -> %d songs (%d/%d)", i, count, curtry,
-                    kMaxFolderReadTries);
-                if (count == -1) {
-                    delay(500);
-                    continue;
-                }
-                folder_count_[i] = count;
-                break;
-            }
-        }
-        setEqMode(eq_mode_);
-    }
+    Mp3Module(Mp3Driver* mp3_driver, ePlayMode skip_mode);
 
     void setSkipMode(ePlayMode skip_mode) { skip_mode_ = skip_mode; }
 
