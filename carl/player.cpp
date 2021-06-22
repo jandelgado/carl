@@ -22,7 +22,9 @@
 #include "player.h"  // NOLINT
 #include "log.h"
 
-Player::Player(Mp3Module* mp3_module, Keypad* keypad, VolumeKnob* volume_knob,
+Player::Player(Mp3Module* mp3_module,
+               KeyEventSource* keypad,
+               VolumeKnob* volume_knob,
                JLed* status_led)
     : mp3_module_(mp3_module),
       volume_knob_(volume_knob),

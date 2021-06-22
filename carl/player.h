@@ -22,9 +22,9 @@
 #pragma once
 #include <Arduino.h>
 #include <jled.h>
-#include "keypad.h"     // NOLINT
-#include "mp3module.h"  // NOLINT
-#include "volume.h"     // NOLINT
+#include "key_event_source.h"
+#include "mp3module.h"
+#include "volume.h"
 
 class Player {
  private:
@@ -37,7 +37,7 @@ class Player {
 
  public:
   Player() = delete;
-  Player(Mp3Module* mp3_module, Keypad* keypad, VolumeKnob* volume_knob,
+  Player(Mp3Module* mp3_module, KeyEventSource* keypad, VolumeKnob* volume_knob,
          JLed* status_led);
 
   // play random jingle
@@ -57,7 +57,7 @@ class Player {
 
   Mp3Module* const mp3_module_;
   VolumeKnob* const volume_knob_;
-  Keypad* const keypad_;
+  KeyEventSource* const keypad_;
   JLed* const status_led_;
   eState state_;
   eKeypadMode keypad_mode_ = eKeypadMode::PLAYLIST;

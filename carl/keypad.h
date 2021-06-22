@@ -22,15 +22,16 @@
 #pragma once
 #include <AnalogMultiButton.h>
 #include "key_events.h"
+#include "key_event_source.h"
 
-class Keypad {
+class Keypad : public KeyEventSource {
  public:
     explicit Keypad(int pin);
-    void update();
+    void update() override;
 
     // return logical key event of last key press or KeyEvent::kNone if no
     // key was pressed
-    KeyEvent::Type getKeyEvent();
+    KeyEvent::Type getKeyEvent() override;
 
  private:
     // ** ADD YOUR OWN VALUES HERE / HIER EIGENE WERTE EINTRAGEN **
