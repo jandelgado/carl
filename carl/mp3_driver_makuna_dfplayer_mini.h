@@ -86,36 +86,36 @@ class Mp3DriverMakunaDfPlayerMini : public Mp3Driver {
         df_player_.setPlaybackSource(DfMp3_PlaySource::DfMp3_PlaySource_Sd);
     }
 
-    virtual void start() { df_player_.start(); }
+    void start() override { df_player_.start(); }
 
-    virtual void pause() { df_player_.pause(); }
+    void pause() override { df_player_.pause(); }
 
-    virtual void stop() { df_player_.stop(); }
+    void stop() override { df_player_.stop(); }
 
-    virtual void playSongFromFolder(uint8_t folder, uint16_t song) {
+    void playSongFromFolder(uint8_t folder, uint16_t song) override {
         df_player_.playFolderTrack16(folder, song);
     }
 
-    virtual void setVolume(uint8_t volume) { df_player_.setVolume(volume); }
+    void setVolume(uint8_t volume) override { df_player_.setVolume(volume); }
 
-    virtual uint8_t getMaxVolume() const { return 30; }
+    uint8_t getMaxVolume() const override { return 30; }
 
-    virtual void setEqMode(uint8_t mode) {
+    void setEqMode(uint8_t mode) override {
         df_player_.setEq(static_cast<DfMp3_Eq>(mode));
     }
 
-    virtual uint8_t getNumEqModes() const {
+    uint8_t getNumEqModes() const override {
         // DfPlayerMini has 6 different EQ modes
         return 6;
     }
 
-    virtual int16_t getFileCountInFolder(uint8_t folder) {
+    int16_t getFileCountInFolder(uint8_t folder) override {
         return df_player_.getFolderTrackCount(folder);
     }
 
-    virtual bool isBusy() { return digitalRead(busy_pin_) == LOW; }
+    bool isBusy() override { return digitalRead(busy_pin_) == LOW; }
 
-    virtual void update() { df_player_.loop(); }
+    void update() override { df_player_.loop(); }
 };
 
 template <class T>
