@@ -40,8 +40,6 @@ class Player {
   Player(Mp3Module* mp3_module, KeyEventSource* keypad, VolumeKnob* volume_knob,
          JLed* status_led);
 
-  // play random jingle
-//  void playJingle();
   // call from main loop() to update state
   void update();
 
