@@ -81,7 +81,9 @@ class Mp3DriverMakunaDfPlayerMini : public Mp3Driver {
     template <class T>
     Mp3DriverMakunaDfPlayerMini(T* serial, uint8_t busy_pin)
         : df_player_(DfMp3(*serial)), busy_pin_(busy_pin) {
-        pinMode(busy_pin_, INPUT);
+        // PIN is low active. By using INPUT_PULLUP isBusy() will return
+        // false if the busy_pin GPIO is not correctly connected.
+        pinMode(busy_pin_, INPUT_PULLUP);
         df_player_.begin();
         df_player_.setPlaybackSource(DfMp3_PlaySource::DfMp3_PlaySource_Sd);
     }

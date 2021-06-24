@@ -33,7 +33,7 @@ Mp3Module::Mp3Module(Mp3Driver* mp3_driver, ePlayMode skip_mode)
             LOG("  folder %d -> %d songs (%d/%d)", i, count, curtry,
                 kMaxFolderReadTries);
             if (count == -1) {
-                delay(500);
+                delay(500);  // workaround for non responding DFPlayers...
                 continue;
             }
             folder_count_[i] = count;
@@ -90,12 +90,12 @@ void Mp3Module::update() {
 
             if (event == eEvent::NEXT || !busy) {
                 if (skip_mode_ == ePlayMode::SINGLE_SONG) {
-                    LOG("m one song stop > stopped");
+                    LOG("m play single song > stopped");
                     state_ = eState::STOPPED;
                     return;
                 }
 
-                LOG("m next, busy=%d", busy);
+                LOG("m next");
                 const auto info = getNextSong();
                 if (info.found_) {
                     playSongFromFolder(info.folder_, info.song_);
@@ -145,14 +145,18 @@ void Mp3Module::update() {
         } break;
 
         case eState::WAIT_FOR_PLAYER_TO_START:
+            // after a grace period of 400ms, start watching the busy signal to
+            // signal that playback started.
             if (busy && (millis() - time_start_playing_) > 400) {  // TODO(jd)
                 // DFPlayer signals that playback has started
+                LOG("m playback started ...");
                 song_playing_since_ = millis();
                 state_ = eState::PLAYING;
             } else {
                 if (millis() - time_start_playing_ > kTimeoutStartPlayingMs) {
                     // DFPlayer did not start within expected time, stop.
-                    LOG("m playback did not start -> stop.");
+                    LOG("m playback did not start after %d ms -> stop.",
+                        kTimeoutStartPlayingMs);
                     state_ = eState::STOPPED;
                 }
             }
