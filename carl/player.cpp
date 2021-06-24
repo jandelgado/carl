@@ -101,12 +101,12 @@ void Player::checkKeyEvents() {
         case KeyEvent::kNone:
             break;
         case KeyEvent::kStop:
-            LOG("stop");
+            LOG("k stop");
             mp3_module_->setEventStop();
             status_led_->Breathe(4000).DelayAfter(6000).Forever();
             break;
         case KeyEvent::kPlayPause:
-            LOG("play/pause");
+            LOG("k play/pause");
             if (keypad_mode_ == eKeypadMode::PLAYLIST) {
                 if (mp3_module_->isBusy()) {
                     // entering pause
@@ -123,20 +123,20 @@ void Player::checkKeyEvents() {
             }
             break;
         case KeyEvent::kConfigMode:
-            LOG("enter config mode");
+            LOG("k enter config mode");
             keypad_mode_ = eKeypadMode::CONFIG;
             status_led_->Blink(50, 50).Repeat(5);
             break;
         case KeyEvent::kNext:
             if (keypad_mode_ == eKeypadMode::PLAYLIST) {
-                LOG("next");
+                LOG("k next");
                 mp3_module_->setEventNext();
                 status_led_->FadeOff(250).Repeat(1);
             }
             break;
         case KeyEvent::kPrev:
             if (keypad_mode_ == eKeypadMode::PLAYLIST) {
-                LOG("prev");
+                LOG("k prev");
                 mp3_module_->setEventPrev();
                 status_led_->FadeOff(250).Repeat(1);
             }
@@ -151,15 +151,14 @@ void Player::checkKeyEvents() {
         case KeyEvent::kFolder8:
         case KeyEvent::kFolder9: {
             const auto folder = keyEvent - KeyEvent::kFolder1;
+            LOG("k play folder %d", folder);
 
             if (keypad_mode_ == eKeypadMode::PLAYLIST) {
-                LOG("play folder %d", folder);
                 mp3_module_->setEventPlaySong(folder, 0);
                 status_led_->FadeOff(250).Repeat(1);
             } else if (keypad_mode_ == eKeypadMode::CONFIG) {
                 // in config mode: Folder Button #1 cycles through eq modes
                 if (keyEvent == KeyEvent::kFolder1) {
-                    LOG("next eq mode");
                     mp3_module_->nextEqMode();
                     status_led_->FadeOff(50).Repeat(1);
                 }

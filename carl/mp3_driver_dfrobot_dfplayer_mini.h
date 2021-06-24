@@ -43,7 +43,7 @@ class Mp3DriverDfRobotDfPlayerMini : public Mp3Driver {
     Mp3DriverDfRobotDfPlayerMini(T* serial, uint8_t busy_pin)
         : busy_pin_(busy_pin) {
         serial->begin(9600);
-        pinMode(busy_pin_, INPUT);
+        pinMode(busy_pin_, INPUT_PULLUP);
         df_player_.begin(*serial, true, false);
         df_player_.outputDevice(DFPLAYER_DEVICE_SD);
     }
