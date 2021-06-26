@@ -21,8 +21,16 @@
 //
 #include "mp3module.h"  // NOLINT
 
+// uncomment to use large folder DFPlayer API with up to 3000 mp3s in a folder.
+// files are named "##/####*.mp3" then. Does not work with all DFPlayers.
+// #define USE_LARGE_FOLDERS
+
 Mp3Module::Mp3Module(Mp3Driver* mp3_driver, ePlayMode skip_mode)
     : mp3_driver_(mp3_driver), skip_mode_(skip_mode) {
+#ifdef USE_LARGE_FOLDERS
+    LOG("m using large folders");
+#endif
+    LOG("m scanning folders...");
     // get number of files per folder so we can later browse the folders.
     memset(folder_count_, 0, sizeof(uint16_t) * kMaxFolders);
     for (auto i = 0; i < kMaxFolders; i++) {
@@ -212,7 +220,11 @@ void Mp3Module::playSongFromFolder(uint8_t folder, uint16_t song) {
     LOG("play s=%d, f=%d (n=%d)", song, folder, folder_count_[folder]);
     cur_folder_ = folder;
     cur_song_ = song;
-    mp3_driver_->playSongFromFolder(folder + 1, song + 1);
+#ifdef USE_LARGE_FOLDERS
+    mp3_driver_->playSongFromLargeFolder(folder + 1, song + 1);
+#else
+    mp3_driver_->playSongFromFolder(folder + 1, static_cast<uint8_t>(song + 1));
+#endif
 }
 
 // Randomly select a song from the given folder
