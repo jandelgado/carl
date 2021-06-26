@@ -57,7 +57,11 @@ class Mp3DriverPowerBrokerDfPlayerMini : public Mp3Driver {
 
     void stop() override { df_player_.stop(); }
 
-    void playSongFromFolder(uint8_t folder, uint16_t song) override {
+    void playSongFromFolder(uint8_t folder, uint8_t song) override {
+        df_player_.playFolder(folder, song);
+    }
+
+    void playSongFromLargeFolder(uint8_t folder, uint16_t song) override {
         df_player_.playLargeFolder(folder, song);
     }
 

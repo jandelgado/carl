@@ -32,8 +32,10 @@ class Mp3Driver {
     virtual void pause() = 0;
     // stop playback
     virtual void stop() = 0;
-    // play song from given folder.
-    virtual void playSongFromFolder(uint8_t folder, uint16_t song) = 0;
+    // play song from given folder, where files are named ##/###*.mp3
+    virtual void playSongFromFolder(uint8_t folder, uint8_t  song) = 0;
+    // play song from given large folder, where files are named ##/####*.mp3
+    virtual void playSongFromLargeFolder(uint8_t folder, uint16_t song) = 0;
     // return maximum allowed volume
     virtual uint8_t getMaxVolume() const = 0;
     // set volume. volume is in range [0..getMaxVolume()]
