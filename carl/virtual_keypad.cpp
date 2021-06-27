@@ -25,8 +25,12 @@
 
 VirtualKeypad::VirtualKeypad(Stream* serial, KeyEventSource* next)
         : serial_(serial), next_(next) {
-    LOG("virtual keypad: press 123456789: playlist +:next -:prev song");
-    LOG("==============  p:play/pause, c:config");
+    help();
+}
+
+void VirtualKeypad::help() {
+    LOG("[ virtual keypad: press 123456789: playlist, +:next -:prev song");
+    LOG("[                 p:play/pause, s:stop, c:config, h: this help");
 }
 
 void VirtualKeypad::update() {
@@ -75,6 +79,9 @@ void VirtualKeypad::update() {
             case 'c':
                 last_ = KeyEvent::kConfigMode;
                 break;
+            case 'h':
+                help();
+                // fall through
             default:
                 last_ = KeyEvent::kNone;
                 break;
