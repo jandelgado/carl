@@ -38,9 +38,9 @@
 
 // uncomment driver to use in case none is set. Don't forget to install
 // the needed lib!
-#define USE_MAKUNA_MP3_DRIVER
+// #define USE_MAKUNA_MP3_DRIVER
 // #define USE_DFROBOT_MP3_DRIVER
-// #define USE_POWERBROKER_MP3_DRIVER
+#define USE_POWERBROKER_MP3_DRIVER
 
 #endif
 
