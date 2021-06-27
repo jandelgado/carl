@@ -41,6 +41,8 @@ class VirtualKeypad : public KeyEventSource {
     }
 
  private:
+    void help();
+
     Stream* serial_;
     KeyEventSource* next_;
     KeyEvent::Type last_;
