@@ -22,6 +22,27 @@
 #pragma once
 #include <Arduino.h>
 
+// uncomment to use large folder DFPlayer API with up to 3000 mp3s in a folder.
+// files are named "##/####*.mp3" then. Does not work with all DFPlayers,
+// otherwise files are named "##/###*.mp3".
+#define USE_LARGE_FOLDER
+
+// uncomment to disable logging
+// #define NO_LOGGING
+
+// uncomment to enable the config mode option
+// #define ENABLE_CONFIG_MODE
+
+// Select  DFPlayerMini driver lib to use.
+// Don't forget to install the needed lib!
+//
+// Leave untouched to use default (Powerbroker driver) or if you set
+// the library in your platform.ini file. Otherwise uncomment driver to use.
+// See also mp3_driver_factory.h
+// #define USE_MAKUNA_MP3_DRIVER
+// #define USE_DFROBOT_MP3_DRIVER
+// #define USE_POWERBROKER_MP3_DRIVER
+
 // Hardware configuration - where stuff is connected / Konfiguration der
 // genutzen GPIO am Arduino Pro Mini.
 constexpr uint8_t PIN_BUTTONS = A2;
@@ -31,3 +52,4 @@ constexpr uint8_t PIN_RX = 9;
 constexpr uint8_t PIN_TX = 8;
 constexpr uint8_t PIN_LED = 10;
 constexpr uint8_t PIN_DFPLAYER_BUSY = 12;
+

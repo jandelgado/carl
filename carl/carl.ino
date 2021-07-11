@@ -23,7 +23,7 @@
 #include <SoftwareSerial.h>
 #include <jled.h>
 
-#include "carl.h"
+#include "config.h"
 #include "keypad.h"
 #include "log.h"
 #include "mp3_driver.h"

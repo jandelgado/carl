@@ -24,7 +24,7 @@
 #ifdef USE_MAKUNA_MP3_DRIVER
 
 #include <DFMiniMp3.h>
-#include <log4arduino.h>
+#include "log.h"
 #include "mp3_driver.h"  // NOLINT
 
 // implementation of the Mp3Driver module for the Makuna DfMiniMp3 library

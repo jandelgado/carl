@@ -20,7 +20,11 @@
 // IN THE SOFTWARE.
 //
 #pragma once
+
+#include "config.h"
+
 #ifndef NO_LOGGING
-#define ENABLE_LOG4ARDUINO  // comment out to disable logging
+#define ENABLE_LOG4ARDUINO
 #endif
 #include <log4arduino.h>
+

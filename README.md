@@ -10,6 +10,7 @@ shortly.
 <!-- vim-markdown-toc GFM -->
 
 * [Build the firmware](#build-the-firmware)
+    * [Configuration](#configuration)
     * [Arduino IDE](#arduino-ide)
     * [PlatformIO](#platformio)
 * [References](#references)
@@ -20,6 +21,29 @@ shortly.
 ## Build the firmware
 
 The firmware can be built using the Arduino IDE or PlatformIO.
+
+### Configuration
+
+The firmware image can be configured either in [config.h](carl/config.h) (for Arduino IDE) or
+
+in [platform.ini](carl/platform.ini). The following options can be configured:
+
+| Option                    | `#define`                    | Default                             |
+|---------------------------|------------------------------|-------------------------------------|
+| Disable logging           | `NO_LOGGING`                 | unset, i.e. logging is enabled      |
+| Enable configuration mode | `ENABLE_CONFIG_MODE`         | unset, i.e. config mode is disabled |
+| Support large folders     | `USE_LARGE_FOLDERS`          | enabled                             |
+| Use PowerBroker's driver  | `USE_POWERBROKER_MP3_DRIVER` | this is the default                 |
+| Use Makunas's driver      | `USE_MAKUNA_MP3_DRIVER`      |                                     |
+| Use DFRobot's driver      | `USE_DFROBOT_MP3_DRIVER`     |                                     |
+ 
+Choose one of the `USE_*_MP3_DRIVER` options. If not set, the PowerBroker
+driver will be used. When the firmware is build using platformio (i.e. using
+`make`) the required libraries are downloaded automatically.  When using the
+Arduino IDE, don't forget to install the actual libraries:
+* [DFPlayerMini_Fast](https://github.com/PowerBroker2/DFPlayerMini_Fast) and [FireTimer](https://github.com/PowerBroker2/FireTimer) for `USE_POWEBROKER_MP3_DRIVER`
+* [DFMiniMp3](https://github.com/Makuna/DFMiniMp3) for `USE_MAKUNA_MP3_DRIVER`
+* [DFRobotPlayerMini](https://github.com/DFRobot/DFRobotDFPlayerMini) for `USE_DFROBOT_MP3_DRIVER` 
 
 ### Arduino IDE
 

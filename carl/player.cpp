@@ -21,6 +21,7 @@
 //
 #include "player.h"  // NOLINT
 #include "log.h"
+#include "config.h"
 
 Player::Player(Mp3Module* mp3_module, KeyEventSource* keypad,
                VolumeKnob* volume_knob, JLed* status_led)
@@ -122,11 +123,13 @@ void Player::checkKeyEvents() {
                 keypad_mode_ = eKeypadMode::PLAYLIST;
             }
             break;
+#ifdef ENABLE_CONFIG_MODE
         case KeyEvent::kConfigMode:
             LOG("k enter config mode");
             keypad_mode_ = eKeypadMode::CONFIG;
             status_led_->Blink(50, 50).Repeat(5);
             break;
+#endif
         case KeyEvent::kNext:
             if (keypad_mode_ == eKeypadMode::PLAYLIST) {
                 LOG("k next");
