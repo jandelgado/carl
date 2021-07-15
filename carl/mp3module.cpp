@@ -19,11 +19,8 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 //
-#include "mp3module.h"  // NOLINT
-
-// uncomment to use large folder DFPlayer API with up to 3000 mp3s in a folder.
-// files are named "##/####*.mp3" then. Does not work with all DFPlayers.
-// #define USE_LARGE_FOLDERS
+#include "mp3module.h"
+#include "config.h"
 
 Mp3Module::Mp3Module(Mp3Driver* mp3_driver, ePlayMode skip_mode)
     : mp3_driver_(mp3_driver), skip_mode_(skip_mode) {

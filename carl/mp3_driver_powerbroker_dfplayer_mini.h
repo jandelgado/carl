@@ -24,8 +24,8 @@
 #ifdef USE_POWERBROKER_MP3_DRIVER
 
 #include <DFPlayerMini_Fast.h>
-#include "mp3_driver.h"  // NOLINT
-#include <log4arduino.h>
+#include "log.h"
+#include "mp3_driver.h"
 
 // implementation of the Mp3Driver module for the DFRobot library
 // https://github.com/DFRobot/DFRobotDFPlayerMini

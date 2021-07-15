@@ -28,20 +28,15 @@
 //
 #pragma once
 #include "mp3_driver.h"
+#include "config.h"
 
 #if !defined(USE_MAKUNA_MP3_DRIVER) &&  \
     !defined(USE_DFROBOT_MP3_DRIVER) && \
     !defined(USE_POWERBROKER_MP3_DRIVER)
 
 #warning neither USE_MAKUNA_MP3_DRIVER, USE_POWERBROKER_MP3_DRIVER, \
-         USE_DFROBOT_MP3_DRIVER set, defaulting to USE_MAKUNA_MP3_DRIVER
-
-// uncomment driver to use in case none is set. Don't forget to install
-// the needed lib!
-// #define USE_MAKUNA_MP3_DRIVER
-// #define USE_DFROBOT_MP3_DRIVER
+         USE_DFROBOT_MP3_DRIVER set, defaulting to USE_POWERBROKER_MP3_DRIVER
 #define USE_POWERBROKER_MP3_DRIVER
-
 #endif
 
 #if defined(USE_MAKUNA_MP3_DRIVER)
@@ -57,5 +52,5 @@
 #include "mp3_driver_dfrobot_dfplayer_mini.h"
 
 #else
-#error "unknown MP3 driver configured."
+#error "unknown or none MP3 driver configured."
 #endif
