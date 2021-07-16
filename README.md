@@ -32,7 +32,7 @@ in [platform.ini](carl/platform.ini). The following options can be configured:
 |---------------------------|------------------------------|-------------------------------------|
 | Disable logging           | `NO_LOGGING`                 | unset, i.e. logging is enabled      |
 | Enable configuration mode | `ENABLE_CONFIG_MODE`         | unset, i.e. config mode is disabled |
-| Support large folders     | `USE_LARGE_FOLDERS`          | enabled                             |
+| Support large folders     | `USE_LARGE_FOLDERS`          | disabled                            |
 | Use PowerBroker's driver  | `USE_POWERBROKER_MP3_DRIVER` | this is the default                 |
 | Use Makunas's driver      | `USE_MAKUNA_MP3_DRIVER`      |                                     |
 | Use DFRobot's driver      | `USE_DFROBOT_MP3_DRIVER`     |                                     |

@@ -24,8 +24,8 @@
 
 // uncomment to use large folder DFPlayer API with up to 3000 mp3s in a folder.
 // files are named "##/####*.mp3" then. Does not work with all DFPlayers,
-// otherwise files are named "##/###*.mp3".
-#define USE_LARGE_FOLDER
+// otherwise files are named "##/###*.mp3", with only up to 255 file per folder.
+// #define USE_LARGE_FOLDERS
 
 // uncomment to disable logging
 // #define NO_LOGGING
