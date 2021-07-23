@@ -9,6 +9,8 @@ shortly.
 
 <!-- vim-markdown-toc GFM -->
 
+* [Hardware](#hardware)
+    * [DFPlayerMini Modules](#dfplayermini-modules)
 * [Build the firmware](#build-the-firmware)
     * [Configuration](#configuration)
     * [Arduino IDE](#arduino-ide)
@@ -17,6 +19,29 @@ shortly.
 * [Author](#author)
 
 <!-- vim-markdown-toc -->
+
+## Hardware
+
+TODO
+
+### DFPlayerMini Modules
+
+During the tests of Carl, we encountered different DFPlayerMini modules, which
+turned out to behave differently. DFPlayer's with the GD3200B chip for example
+were found **not** to work with any of the available libraries.
+
+The differences can easily be spotted and are described below.
+
+| Working                                         | Not Working                                                             |
+|---------------------------------------------------------|---------------------------------------------------------------------------------|
+| 24 pins, labelled `AA20HFJ648-94`                       | 16 pins, labelled `GD3200B`                                                     |
+| <img src=".images/dfplayer_mini_good.jpg" height="200"> | <img src=".images/dfplayer_mini_bad.jpg" height="200"> |
+
+The DFPlayerMini with the `GD3200B` failed reporting correctly the number of
+songs per folder.
+
+There are more models out there, see [this site for a testing tool and further
+information](https://github.com/ghmartin77/DFPlayerAnalyzer)
 
 ## Build the firmware
 
@@ -61,7 +86,7 @@ Install the needed libraries using `Sketch` > `Include Library` > `Manage Librar
 
 Alternatively, install the libraries with this command:
 ```
-arduino --install-library JLed:4.7.0,log4arduino:1.0.0,AnalogMultiButton:1.0.0,DFPlayerMini_Fast:1.2.4
+arduino --install-library JLed:4.7.0,log4arduino:1.0.0,AnalogMultiButton:1.0.0,DFPlayerMini_Fast:1.2.4,FireTimer:1.0.5
 ```
 
 Compile and upload the sketch using the corresponding commands in the Arduino
@@ -84,9 +109,12 @@ the Arduino IDE, the PowerBroker2 driver is used by default.
 ## References
 
 * [Carl testdata generator](https://github.com/jandelgado/carl-testdata/)
-* [DFRobot Library](https://github.com/DFRobot/DFRobotDFPlayerMini)
-* [Makuna Library](https://github.com/Makuna/DFMiniMp3)
-* [Powerbroker2 Library](https://github.com/PowerBroker2/DFPlayerMini_Fast)
+* [DFRobot DFRobotDFPlayerMini Library](https://github.com/DFRobot/DFRobotDFPlayerMini)
+* [Makuna DFMiniMp3 Library](https://github.com/Makuna/DFMiniMp3)
+* [Powerbroker2 DFPlayerMini_Fast Library](https://github.com/PowerBroker2/DFPlayerMini_Fast)
+* [JLed](https://github.com/jandelgado/jled)
+* [log4arduino](https://github.com/jandelgado/log4arduino)
+* [DFPlayer Analyzer](https://github.com/ghmartin77/DFPlayerAnalyzer)
 
 ## Author
 
