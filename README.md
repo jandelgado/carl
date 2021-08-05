@@ -2,10 +2,15 @@
 
 [![build firmware](https://github.com/jandelgado/carl/actions/workflows/build.yml/badge.svg)](https://github.com/jandelgado/carl/actions/workflows/build.yml)
 
-This is the firmware repository for the Carl music box. Details will follow
-shortly.
+This is the firmware repository for the Carl music box. More details will
+follow shortly.
 
-<img src=".images/carl.jpg" width=400 alt="carl music box">
+Carl is featured in the german edition of the Make Magazine in August 2021:
+
+<p float="left">
+  <img src=".images/make_04_21.jpg" height=300>
+  <img src=".images/carl.jpg" height=300 alt="carl music box">
+</p>
 
 <!-- vim-markdown-toc GFM -->
 
