@@ -100,7 +100,7 @@ Select `Arduino Pro or Pro Mini` as the target board under `Tools` > `Board` >
 Install the needed libraries using `Sketch` > `Include Library` > `Manage Libraries...`:
 * AnalogMultiButton (1.0.0)
 * DFPlayerMini_Fast (1.2.4) (Powerbroker DFPlayer Library)
-* JLed (4.8.0)
+* JLed (4.9.0)
 * log4arduino (1.1.0)
 
 Alternatively, install the libraries with this command:

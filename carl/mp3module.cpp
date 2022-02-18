@@ -28,7 +28,7 @@ Mp3Module::Mp3Module(Mp3Driver* mp3_driver, ePlayMode skip_mode)
     LOG("m using large folders");
 #endif
     LOG("m scanning folders...");
-   
+
 #ifdef GD3200B_QUIRKS
     LOG("m enabling GD3200B quirks mode");
     // mute since we need to play songs in order to get the file counts below
@@ -44,7 +44,7 @@ Mp3Module::Mp3Module(Mp3Driver* mp3_driver, ePlayMode skip_mode)
         // this is needed for the GD3200B since otherwise getFileCountInFolder
         // will not return correct values
         delay(100);
-        playSongFromFolder(i, 0);   // WORKAROUND to make getFileCountInFolder work
+        playSongFromFolder(i, 0);
         delay(400);
         mp3_driver_->pause();
         delay(400);
