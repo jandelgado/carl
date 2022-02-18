@@ -84,6 +84,9 @@ class Mp3DriverMakunaDfPlayerMini : public Mp3Driver {
         // PIN is low active. By using INPUT_PULLUP isBusy() will return
         // false if the busy_pin GPIO is not correctly connected.
         pinMode(busy_pin_, INPUT_PULLUP);
+#ifdef GD3200B_QUIRKS
+        delay(1000);
+#endif
         df_player_.begin();
         df_player_.setPlaybackSource(DfMp3_PlaySource::DfMp3_PlaySource_Sd);
     }

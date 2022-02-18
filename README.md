@@ -8,16 +8,18 @@ follow shortly.
 Carl is featured in the german edition of the Make Magazine in August 2021:
 
 <p float="left">
-  <img src=".images/make_04_21.jpg" height=300>
-  <img src=".images/carl.jpg" height=300 alt="carl music box">
+<img src=".images/make_04_21.jpg" height=300>
+<img src=".images/carl.jpg" height=300 alt="carl music box">
 </p>
 
 <!-- vim-markdown-toc GFM -->
 
 * [Hardware](#hardware)
-    * [DFPlayerMini Modules](#dfplayermini-modules)
+    * [Note on DFPlayer Mini Modules](#note-on-dfplayer-mini-modules)
 * [Build the firmware](#build-the-firmware)
     * [Configuration](#configuration)
+        * [DFPlayer driver library selection](#dfplayer-driver-library-selection)
+        * [GD3200B Quirks mode](#gd3200b-quirks-mode)
     * [Arduino IDE](#arduino-ide)
     * [PlatformIO](#platformio)
 * [References](#references)
@@ -29,24 +31,27 @@ Carl is featured in the german edition of the Make Magazine in August 2021:
 
 TODO
 
-### DFPlayerMini Modules
+### Note on DFPlayer Mini Modules
 
-During the tests of Carl, we encountered different DFPlayerMini modules, which
-turned out to behave differently. DFPlayer's with the GD3200B chip for example
-were found **not** to work with any of the available libraries.
+During the tests of Carl, we encountered different DFPlayer Mini modules, which
+turned out to behave differently. DFPlayer's with the `GD3200B` chip for example
+were found ~~ **not** to work with any of the available libraries~~ to only work
+in a quirks mode.
 
 The differences can easily be spotted and are described below.
 
-| Working                                         | Not Working                                                             |
-|---------------------------------------------------------|---------------------------------------------------------------------------------|
-| 24 pins, labelled `AA20HFJ648-94`                       | 16 pins, labelled `GD3200B`                                                     |
+| Working                                                 | ~~Not Working~~ Working with Quirks                    |
+|---------------------------------------------------------|--------------------------------------------------------|
+| 24 pins, labelled `AA20HFJ648-94`                       | 16 pins, labelled `GD3200B`                            |
 | <img src=".images/dfplayer_mini_good.jpg" height="200"> | <img src=".images/dfplayer_mini_bad.jpg" height="200"> |
 
 The DFPlayerMini with the `GD3200B` failed reporting correctly the number of
-songs per folder.
+songs per folder. A Quirks mode is provided, to get these modules work with
+Carl.
 
-There are more models out there, see [this site for a testing tool and further
-information](https://github.com/ghmartin77/DFPlayerAnalyzer)
+Besides the mentioned `GD3200B` model, there are more models out there which
+may be incompatible, see [this site for a testing tool and further
+information](https://github.com/ghmartin77/DFPlayerAnalyzer).
 
 ## Build the firmware
 
@@ -55,25 +60,34 @@ The firmware can be built using the Arduino IDE or PlatformIO.
 ### Configuration
 
 The firmware image can be configured either in [config.h](carl/config.h) (for Arduino IDE) or
-
 in [platform.ini](carl/platform.ini). The following options can be configured:
 
-| Option                    | `#define`                    | Default                             |
-|---------------------------|------------------------------|-------------------------------------|
-| Disable logging           | `NO_LOGGING`                 | unset, i.e. logging is enabled      |
-| Enable configuration mode | `ENABLE_CONFIG_MODE`         | unset, i.e. config mode is disabled |
-| Support large folders     | `USE_LARGE_FOLDERS`          | disabled                            |
-| Use PowerBroker's driver  | `USE_POWERBROKER_MP3_DRIVER` | this is the default                 |
-| Use Makunas's driver      | `USE_MAKUNA_MP3_DRIVER`      |                                     |
-| Use DFRobot's driver      | `USE_DFROBOT_MP3_DRIVER`     |                                     |
- 
+| Option                     | `#define`                    | Default                             |
+|----------------------------|------------------------------|-------------------------------------|
+| Disable logging            | `NO_LOGGING`                 | unset, i.e. logging is enabled      |
+| Enable configuration mode  | `ENABLE_CONFIG_MODE`         | unset, i.e. config mode is disabled |
+| Support large folders      | `USE_LARGE_FOLDERS`          | disabled                            |
+| Use PowerBroker's driver   | `USE_POWERBROKER_MP3_DRIVER` | this is the default                 |
+| Use Makunas's driver       | `USE_MAKUNA_MP3_DRIVER`      |                                     |
+| Use DFRobot's driver       | `USE_DFROBOT_MP3_DRIVER`     |                                     |
+| Enable GD3200B Quirks Mode | `GD3200B_QUIRKS`             | unset                               |
+
+#### DFPlayer driver library selection
+
 Choose one of the `USE_*_MP3_DRIVER` options. If not set, the PowerBroker
 driver will be used. When the firmware is build using platformio (i.e. using
 `make`) the required libraries are downloaded automatically.  When using the
-Arduino IDE, don't forget to install the actual libraries:
+Arduino IDE, don't forget to install the actual library used, e.g.:
 * [DFPlayerMini_Fast](https://github.com/PowerBroker2/DFPlayerMini_Fast) and [FireTimer](https://github.com/PowerBroker2/FireTimer) for `USE_POWEBROKER_MP3_DRIVER`
-* [DFMiniMp3](https://github.com/Makuna/DFMiniMp3) for `USE_MAKUNA_MP3_DRIVER`
-* [DFRobotPlayerMini](https://github.com/DFRobot/DFRobotDFPlayerMini) for `USE_DFROBOT_MP3_DRIVER` 
+* [DFMiniMp3](https://github.com/Makuna/DFMiniMp3) for `USE_MAKUNA_MP3_DRIVER` (recommended for GD3200B models)
+* [DFRobotPlayerMini](https://github.com/DFRobot/DFRobotDFPlayerMini) for `USE_DFROBOT_MP3_DRIVER`
+
+#### GD3200B Quirks mode
+
+When using `GD3200B` based DFPlayer modules, the `GD3200B_QUIRKS` `#define` has
+to be set in order to circumvent some incompatibilities (bugs?) these devices
+have.  I successfully tested a `GD3200B` DFPlayer using the Makuna-Driver
+(`USE_MAKUNA_MP3_DRIVER`) and the quirks mode enabled.
 
 ### Arduino IDE
 
@@ -85,13 +99,13 @@ Select `Arduino Pro or Pro Mini` as the target board under `Tools` > `Board` >
 
 Install the needed libraries using `Sketch` > `Include Library` > `Manage Libraries...`:
 * AnalogMultiButton (1.0.0)
-* DFPlayerMini_Fast (1.2.4)
-* JLed (4.7.0)
-* log4arduino (1.0.0)
+* DFPlayerMini_Fast (1.2.4) (Powerbroker DFPlayer Library)
+* JLed (4.8.0)
+* log4arduino (1.1.0)
 
 Alternatively, install the libraries with this command:
 ```
-arduino --install-library JLed:4.7.0,log4arduino:1.0.0,AnalogMultiButton:1.0.0,DFPlayerMini_Fast:1.2.4,FireTimer:1.0.5
+arduino --install-library JLed:4.9.0,log4arduino:1.1.0,AnalogMultiButton:1.0.0,DFPlayerMini_Fast:1.2.4,FireTimer:1.0.5
 ```
 
 Compile and upload the sketch using the corresponding commands in the Arduino
@@ -123,4 +137,5 @@ the Arduino IDE, the PowerBroker2 driver is used by default.
 
 ## Author
 
-(C) Copyright 2021 by Jan Delgado.
+(C) Copyright 2021-2022 by Jan Delgado.
+

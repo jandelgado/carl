@@ -28,11 +28,28 @@ Mp3Module::Mp3Module(Mp3Driver* mp3_driver, ePlayMode skip_mode)
     LOG("m using large folders");
 #endif
     LOG("m scanning folders...");
+   
+#ifdef GD3200B_QUIRKS
+    LOG("m enabling GD3200B quirks mode");
+    // mute since we need to play songs in order to get the file counts below
+    setVolume(0);
+#endif
+
     // get number of files per folder so we can later browse the folders.
     memset(folder_count_, 0, sizeof(uint16_t) * kMaxFolders);
     for (auto i = 0; i < kMaxFolders; i++) {
         // some module return -1 even if there are files in the folder.
         // in this case we try to read again
+#ifdef GD3200B_QUIRKS
+        // this is needed for the GD3200B since otherwise getFileCountInFolder
+        // will not return correct values
+        delay(100);
+        playSongFromFolder(i, 0);   // WORKAROUND to make getFileCountInFolder work
+        delay(400);
+        mp3_driver_->pause();
+        delay(400);
+#endif
+
         for (auto curtry = 1; curtry <= kMaxFolderReadTries; curtry++) {
             const auto count = mp3_driver_->getFileCountInFolder(i + 1);
             LOG("  folder %d -> %d songs (%d/%d)", i, count, curtry,
