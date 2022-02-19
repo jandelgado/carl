@@ -116,6 +116,7 @@ class Mp3Module {
     // song.
     static auto constexpr kJumpPrevThresh = 3000;
     static auto constexpr kTimeoutStartPlayingMs = 1000;
+    static auto constexpr kTimeWaitPlayerToStart = 1000;
 
     // CONFIG: index (starting with 0) of first and last folder containing
     // playlists (corresponds to folders 01/ .. 09/ on SD card)
@@ -133,7 +134,6 @@ class Mp3Module {
     eEvent event_ = eEvent::NONE;
     ePlayMode skip_mode_;
 
-    //  uint32_t idle_since_ = 0;
     uint32_t song_playing_since_ = 0;
     uint32_t time_start_playing_ = 0;
 

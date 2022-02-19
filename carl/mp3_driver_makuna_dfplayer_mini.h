@@ -122,6 +122,8 @@ class Mp3DriverMakunaDfPlayerMini : public Mp3Driver {
     bool isBusy() override { return digitalRead(busy_pin_) == LOW; }
 
     void update() override { df_player_.loop(); }
+
+    void reset() override { df_player_.reset(); }
 };
 
 template <class T>

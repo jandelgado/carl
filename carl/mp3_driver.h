@@ -33,7 +33,7 @@ class Mp3Driver {
     // stop playback
     virtual void stop() = 0;
     // play song from given folder, where files are named ##/###*.mp3
-    virtual void playSongFromFolder(uint8_t folder, uint8_t  song) = 0;
+    virtual void playSongFromFolder(uint8_t folder, uint8_t song) = 0;
     // play song from given large folder, where files are named ##/####*.mp3
     virtual void playSongFromLargeFolder(uint8_t folder, uint16_t song) = 0;
     // return maximum allowed volume
@@ -50,4 +50,6 @@ class Mp3Driver {
     virtual bool isBusy() = 0;
     // call periodically from the main loop to update the object
     virtual void update() = 0;
+    // reset the player
+    virtual void reset() = 0;
 };

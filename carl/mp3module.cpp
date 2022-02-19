@@ -28,11 +28,38 @@ Mp3Module::Mp3Module(Mp3Driver* mp3_driver, ePlayMode skip_mode)
     LOG("m using large folders");
 #endif
     LOG("m scanning folders...");
+
+#ifdef GD3200B_QUIRKS
+    LOG("m enabling GD3200B quirks mode");
+    // mute since we need to play songs in order to get the file counts below
+    mp3_driver_->reset();
+    delay(1000);
+    setVolume(0);
+#endif
+
     // get number of files per folder so we can later browse the folders.
     memset(folder_count_, 0, sizeof(uint16_t) * kMaxFolders);
     for (auto i = 0; i < kMaxFolders; i++) {
         // some module return -1 even if there are files in the folder.
         // in this case we try to read again
+#ifdef GD3200B_QUIRKS
+        // this is needed for the GD3200B since otherwise getFileCountInFolder
+        // will not return correct values
+        auto tmp_time = millis();
+        delay(100);
+        while (isBusy()) {
+        }
+        playSongFromFolder(i, 0);
+        while (!isBusy() && millis() - tmp_time < 1000) {
+        }
+        delay(100);
+        mp3_driver_->stop();
+        tmp_time = millis();
+        while (isBusy() && millis() - tmp_time < 1000) {
+        }
+        delay(100);
+#endif
+
         for (auto curtry = 1; curtry <= kMaxFolderReadTries; curtry++) {
             const auto count = mp3_driver_->getFileCountInFolder(i + 1);
             LOG("  folder %d -> %d songs (%d/%d)", i, count, curtry,
@@ -45,6 +72,7 @@ Mp3Module::Mp3Module(Mp3Driver* mp3_driver, ePlayMode skip_mode)
             break;
         }
     }
+
     setEqMode(eq_mode_);
 }
 
@@ -152,7 +180,8 @@ void Mp3Module::update() {
         case eState::WAIT_FOR_PLAYER_TO_START:
             // after a grace period of 400ms, start watching the busy signal to
             // signal that playback started.
-            if (busy && (millis() - time_start_playing_) > 400) {  // TODO(jd)
+            if (busy &&
+                (millis() - time_start_playing_) > kTimeWaitPlayerToStart) {
                 // DFPlayer signals that playback has started
                 LOG("m playback started ...");
                 song_playing_since_ = millis();
@@ -237,7 +266,7 @@ Mp3Module::SongInfo Mp3Module::getRandomSongFromFolder(uint8_t folder) const {
 
 // set the players volume
 void Mp3Module::setVolume(uint8_t volume) {
-    LOG("m set vol to %d", volume);  // TODO(jd) max volume
+    LOG("m set vol to %d", volume);
     mp3_driver_->setVolume(volume);
 }
 
