@@ -134,8 +134,8 @@ class Mp3Module {
     eEvent event_ = eEvent::NONE;
     ePlayMode skip_mode_;
 
-    unsigned long song_playing_since_ = 0;
-    unsigned long time_start_playing_ = 0;
+    uint32_t song_playing_since_ = 0;
+    uint32_t time_start_playing_ = 0;
 
     uint8_t cur_folder_ = 0;  // current folder. Indexing starts with 0.
     uint16_t cur_song_ = 0;   // current song. Indexing starts with 0.

@@ -84,7 +84,6 @@ void Player::update() {
  * a change
  */
 uint8_t Player::updateVolume() {
-
     if (millis() - last_volume_update_time_ < kVolumePollDelay) {
         return last_volume_;
     }

@@ -45,7 +45,7 @@ Mp3Module::Mp3Module(Mp3Driver* mp3_driver, ePlayMode skip_mode)
 #ifdef GD3200B_QUIRKS
         // this is needed for the GD3200B since otherwise getFileCountInFolder
         // will not return correct values
-        unsigned long tmp_time = millis();
+        auto tmp_time = millis();
         delay(100);
         while (isBusy()) {
         }
@@ -266,9 +266,8 @@ Mp3Module::SongInfo Mp3Module::getRandomSongFromFolder(uint8_t folder) const {
 
 // set the players volume
 void Mp3Module::setVolume(uint8_t volume) {
-    LOG("m set vol to %d", volume);  // TODO(jd) max volume
+    LOG("m set vol to %d", volume);
     mp3_driver_->setVolume(volume);
-    delay(50);  // TODO GD3200B
 }
 
 // set the EQ mode

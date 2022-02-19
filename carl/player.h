@@ -65,6 +65,6 @@ class Player {
   eState state_;
   eKeypadMode keypad_mode_ = eKeypadMode::PLAYLIST;
   uint8_t last_volume_ = 0;
-  unsigned long last_volume_update_time_ = 0;
-  unsigned long start_time_jingle_;
+  uint32_t last_volume_update_time_ = 0;
+  uint32_t start_time_jingle_;
 };
