@@ -87,7 +87,15 @@ Arduino IDE, don't forget to install the actual library used, e.g.:
 When using `GD3200B` based DFPlayer modules, the `GD3200B_QUIRKS` `#define` has
 to be set in order to circumvent some incompatibilities (bugs?) these devices
 have.  I successfully tested a `GD3200B` DFPlayer using the Makuna-Driver
-(`USE_MAKUNA_MP3_DRIVER`) and the quirks mode enabled.
+(`USE_MAKUNA_MP3_DRIVER`) and the quirks mode enabled. Check the log output
+to make sure that the `GD3200B` quirks mode is enabled on startup:
+
+```
+0(1412): carl starting.
+0(1379): using Makuna driver
+61(1321): m scanning folders...
+62(1319): m enabling GD3200B quirks mode
+```
 
 ### Arduino IDE
 
@@ -127,6 +135,7 @@ the Arduino IDE, the PowerBroker2 driver is used by default.
 
 ## References
 
+* [DFRobot DFPlayer Mini]()
 * [Carl testdata generator](https://github.com/jandelgado/carl-testdata/)
 * [DFRobot DFRobotDFPlayerMini Library](https://github.com/DFRobot/DFRobotDFPlayerMini)
 * [Makuna DFMiniMp3 Library](https://github.com/Makuna/DFMiniMp3)
@@ -134,6 +143,7 @@ the Arduino IDE, the PowerBroker2 driver is used by default.
 * [JLed](https://github.com/jandelgado/jled)
 * [log4arduino](https://github.com/jandelgado/log4arduino)
 * [DFPlayer Analyzer](https://github.com/ghmartin77/DFPlayerAnalyzer)
+* [GD3200 information](https://discourse.voss.earth/t/dfplayer-verschiedene-versionen/681/178)
 
 ## Author
 

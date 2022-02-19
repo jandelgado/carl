@@ -48,6 +48,11 @@ class Player {
   static constexpr uint8_t kVolumeMax = 22;
   // config: volume of jingle
   static constexpr uint8_t kVolumeJingle = 14;
+  // time to wait in ms after the player was started before going to check
+  // the busy signal
+  static constexpr auto kTimeWaitPlayerToStart = 1000;
+  // only poll volume know every kVolumePollDelay ms
+  static constexpr auto kVolumePollDelay = 150;
 
   // read & update volume
   uint8_t updateVolume();
@@ -60,5 +65,6 @@ class Player {
   eState state_;
   eKeypadMode keypad_mode_ = eKeypadMode::PLAYLIST;
   uint8_t last_volume_ = 0;
-  uint32_t start_time_jingle_;
+  unsigned long last_volume_update_time_ = 0;
+  unsigned long start_time_jingle_;
 };

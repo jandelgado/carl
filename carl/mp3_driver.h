@@ -50,4 +50,7 @@ class Mp3Driver {
     virtual bool isBusy() = 0;
     // call periodically from the main loop to update the object
     virtual void update() = 0;
+    // reset the player
+    virtual void reset() = 0;
+    
 };

@@ -66,7 +66,7 @@ void Player::update() {
             status_led_->Update();
             mp3_module_->update();
             if (!mp3_module_->isBusy() &&
-                (millis() - start_time_jingle_) > 500) {
+                (millis() - start_time_jingle_) > kTimeWaitPlayerToStart) {
                 LOG("p play jingle finished");
                 mp3_module_->setEventStop();
                 // Jingle is finished. Set Breathe effect and song 0/0
@@ -84,7 +84,13 @@ void Player::update() {
  * a change
  */
 uint8_t Player::updateVolume() {
+
+    if (millis() - last_volume_update_time_ < kVolumePollDelay) {
+        return last_volume_;
+    }
+    last_volume_update_time_ = millis();
     auto volume = volume_knob_->readVolume(kVolumeMax);
+
     if (volume != last_volume_) {
         mp3_module_->setVolume(volume);
         last_volume_ = volume;
@@ -123,13 +129,13 @@ void Player::checkKeyEvents() {
                 keypad_mode_ = eKeypadMode::PLAYLIST;
             }
             break;
-#ifdef ENABLE_CONFIG_MODE
         case KeyEvent::kConfigMode:
+#ifdef ENABLE_CONFIG_MODE
             LOG("k enter config mode");
             keypad_mode_ = eKeypadMode::CONFIG;
             status_led_->Blink(50, 50).Repeat(5);
-            break;
 #endif
+            break;
         case KeyEvent::kNext:
             if (keypad_mode_ == eKeypadMode::PLAYLIST) {
                 LOG("k next");

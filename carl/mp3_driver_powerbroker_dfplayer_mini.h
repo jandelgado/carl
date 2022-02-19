@@ -85,6 +85,8 @@ class Mp3DriverPowerBrokerDfPlayerMini : public Mp3Driver {
     void update() override {
         // nothing to be done here
     }
+
+    void reset() override { df_player_.reset(); }
 };
 
 template <class T>
