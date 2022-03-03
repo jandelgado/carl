@@ -43,6 +43,9 @@
 // #define USE_DFROBOT_MP3_DRIVER
 // #define USE_POWERBROKER_MP3_DRIVER
 
+// uncomment to enable the GD3200B quirks mode (see README)
+// #define GD3200B_QUIRKS
+
 // Hardware configuration - where stuff is connected / Konfiguration der
 // genutzen GPIO am Arduino Pro Mini.
 constexpr uint8_t PIN_BUTTONS = A2;
