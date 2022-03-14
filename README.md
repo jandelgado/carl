@@ -35,7 +35,7 @@ TODO
 
 During the tests of Carl, we encountered different DFPlayer Mini modules, which
 turned out to behave differently. DFPlayer's with the `GD3200B` chip for example
-were found ~~ **not** to work with any of the available libraries~~ to only work
+were found ~~**not** to work with any of the available libraries~~ to only work
 in a quirks mode.
 
 The differences can easily be spotted and are described below.
