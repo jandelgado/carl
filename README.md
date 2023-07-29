@@ -2,26 +2,37 @@
 
 [![build firmware](https://github.com/jandelgado/carl/actions/workflows/build.yml/badge.svg)](https://github.com/jandelgado/carl/actions/workflows/build.yml)
 
-This is the firmware repository for the Carl music box. More details will
-follow shortly.
+Carl is an MP3 player for kids. This repository hosts the firmware
+and build instructions.
 
-Carl is featured in the german edition of the Make Magazine in August 2021:
+Carl was featured in the German edition of the Make Magazine in August 2021:
 
 <p float="left">
-<img src=".images/make_04_21.jpg" height=300>
-<img src=".images/carl.jpg" height=300 alt="carl music box">
+  <img src=".images/make_04_21.jpg" height=300>
+  <img src=".images/carl.jpg" height=300 alt="carl music box">
 </p>
 
 <!-- vim-markdown-toc GFM -->
 
 * [Hardware](#hardware)
-    * [Note on DFPlayer Mini Modules](#note-on-dfplayer-mini-modules)
+    * [Bill of Material](#bill-of-material)
+        * [Note on DFPlayer Mini Modules](#note-on-dfplayer-mini-modules)
+    * [Circuit](#circuit)
+        * [Buttons](#buttons)
+        * [MP3 player module](#mp3-player-module)
+        * [Amplification and volume control](#amplification-and-volume-control)
+        * [Status LED](#status-led)
+        * [Power supply](#power-supply)
+    * [Wiring details](#wiring-details)
+    * [Construction of the case](#construction-of-the-case)
+    * [Artwork](#artwork)
 * [Build the firmware](#build-the-firmware)
     * [Configuration](#configuration)
         * [DFPlayer driver library selection](#dfplayer-driver-library-selection)
         * [GD3200B Quirks mode](#gd3200b-quirks-mode)
     * [Arduino IDE](#arduino-ide)
     * [PlatformIO](#platformio)
+    * [Connecting the USB-to-Serial adapter](#connecting-the-usb-to-serial-adapter)
 * [References](#references)
 * [Author](#author)
 
@@ -29,9 +40,22 @@ Carl is featured in the german edition of the Make Magazine in August 2021:
 
 ## Hardware
 
-TODO
+### Bill of Material
 
-### Note on DFPlayer Mini Modules
+  * wooden box for the case
+  * 1 [Arduino Pro Mini](https://www.arduino.cc/en/pmwiki.php?n=Main/ArduinoBoardProMini)
+  * 1 [DFPlayer Mini MP3 Module](https://wiki.dfrobot.com/DFPlayer_Mini_SKU_DFR0299)
+  * 1 full range speaker (4 Ohms, 10W, 10cm diameter)
+  * 1 USB Power bank (1 cell including charging and DC-DC converter)
+  * 3 arcade buttons
+  * 9 momentary buttons
+  * 1 potentiometer
+  * 1 power switch
+  * 1 LED + Resistor (220 Ohms)
+  * Resistors (1x500, 11x100, 1x1K) Ohms
+  * cables, screws, glue, metal plates
+
+#### Note on DFPlayer Mini Modules
 
 During the tests of Carl, we encountered different DFPlayer Mini modules, which
 turned out to behave differently. DFPlayer's with the `GD3200B` chip for example
@@ -42,7 +66,7 @@ The differences can easily be spotted and are described below.
 
 | Working                                                 | ~~Not Working~~ Working with Quirks                    |
 |---------------------------------------------------------|--------------------------------------------------------|
-| 24 pins, labelled `AA20HFJ648-94`                       | 16 pins, labelled `GD3200B`                            |
+| 24 pins, labeled `AA20HFJ648-94`                       | 16 pins, labeled `GD3200B`                            |
 | <img src=".images/dfplayer_mini_good.jpg" height="200"> | <img src=".images/dfplayer_mini_bad.jpg" height="200"> |
 
 The DFPlayerMini with the `GD3200B` failed reporting correctly the number of
@@ -52,6 +76,122 @@ Carl.
 Besides the mentioned `GD3200B` model, there are more models out there which
 may be incompatible, see [this site for a testing tool and further
 information](https://github.com/ghmartin77/DFPlayerAnalyzer).
+
+### Circuit
+
+![Schematic](.images/Bild03_schematic_handdrawn.PNG)
+
+#### Buttons
+
+The 12 buttons are connected by a resistor network using only a single wire and
+an analog input of the Arduino. In contrast to a traditional wiring where every
+button is connected individually (12 inputs needed) or using a matrix (3+4
+inputs needed), this drastically simplifies wiring and resource usage on the
+micro controller. 
+
+The principle is as follows: if no button is pressed, the circuit is grounded and
+no current flows. If a button is pressed, the circuit will become a voltage
+divider. Depending on which button is pressed, a different voltage is connected
+to the A2 analog GPIO of the Arduino. Carl uses the [AnalogMultiButton Library](
+https://github.com/dxinteractive/AnalogMultiButton) to control the buttons. 
+
+<p float="left">
+   <img alt="Button wiring schema" src=".images/Bild14_tastenschema.PNG" height=200>
+   <img alt="wiring detail" src=".images/carl_detail_playlist_taster_verdrahtung.JPG" height=200>
+   <img alt="push button wiring detail" src=".images/Bild06_carl_detail_verkabelung_skip_buttons.JPG" height=200>
+</p>
+
+#### MP3 player module
+
+The main components used are an Arduino Pro Mini and the DFPlayer Mini MP3
+module. The latter is controlled through a serial connection to the Arduino
+using a simple protocol. We use a software serial implementation so we can
+still use the builtin serial interface of the Arduino for flashing and to
+monitor logging output. The DFPlayer Mini module provides a `busy` signal,
+which is fed back into the Arduino to monitor, when playback in the module is
+active.
+
+<img alt="DFPlayerMini pinout" src=".images/DFPlayerMini.png" height=250>
+
+#### Amplification and volume control
+
+For amplification, the built-in speaker amplifier (3W) of the DFPlayer Mini is
+used. This works very well even with a larger speaker as used in this project. The
+volume is controlled indirectly by a potentiometer which output is connected to
+an analog input of the Arduino. The value of the potentiometer is used to
+control the output volume of the DFPlayer Mini by sending a volume control
+command to the DFPlayer Mini.
+
+#### Status LED
+
+The status LED is built into the play/pause button. It is used to give visual
+feedback during operation. In future versions, we could add more LEDs to
+provide some effects or more feedback. But be aware that a single LED draws
+about 20mA, which contributes significantly to the total power consumption of
+the player (about 90mA in operation). The LED is controlled by the
+[JLed](https://github.com/jandelgado/jled) library, which evolved as a
+side-project during development of Carl.
+
+#### Power supply
+
+A USB power bank is used as the power supply. Since these devices use a DC-DC
+step up converter (aka boost-converter), this is more efficient then using a
+higher rated power source (e.g. 9V battery) and stepping the voltage down using
+the Arduino's built-in power regulator. Using a power bank also allows to easily
+charge Carl with an off-the-shelf USB charger.
+
+<img alt="connecting the usb power bank" src=".images/carl_stromversorgung.png">
+
+### Wiring details
+
+Inner view of Carl and the stripboard with the Arduino and DFPlayer Mini
+
+<p float="left">
+    <img alt="inner view" src=".images/Bild10_carl_innen_full3.JPG" height=250>
+    <img alt="stripboard" src=".images/Bild07_bau_lochrasterplatine_mit_arduino_und_dfplayer.JPG" height=250>
+</p>
+
+### Construction of the case
+
+While the electronics are straight forward, the case was by far the most time
+consuming part of the project (at least for me...). It was built of an old box
+I had left over from a packaging of two bottles of wine. At first I shorted
+the box little, then I finished the wood with sandpaper. Next the drillings for
+the 3 big buttons and the opening for the speaker were made. The holes for the
+big arcade buttons were drilled using an 1-inch forstner drill.
+
+<p float="left">
+  <img alt="original case" src=".images/Bild04_bau_gehaeuse_weinkiste.JPG" height=200>
+  <img alt="case" src=".images/Bild05_bau_gehaeuse_rohbau_ohne_bohrungen.JPG" height=200>
+  <img alt="case" src=".images/bau_einpassen_tastenfeld.JPG" height=200>
+</p>
+
+<p float="left">
+    <img alt="" src=".images/bau_blech_fuer_tastenfeld.JPG" height=150>
+    <img alt="" src=".images/bau_schablone_tastenfeld.JPG" height=150>
+    <img alt="" src=".images/bau_blech_tastenfeld_mit_bohrungen.JPG" height=150>
+    <img alt="" src=".images/bau_tastenfeld_vorderseite.JPG" height=150>
+</p>
+
+### Artwork
+
+The artwork was applied to the case using the so called *acrylic transfer
+method*.  Basically it works as follows:
+  * laser print your artwork. The method will not work with ink printed
+    material. Note, that during transfer, the image will be mirror-inverted
+  * apply the acrylic medium to the wood, and put the printout with the printed
+    side on it and carefully press it on the acrylic medium
+  * wait until it the acrylic medium is dry (24 hours)
+  * with a sponge and water, carefully rub of the paper
+  * the toner is is now permanently transferred to the acrylic medium
+  * for fixation, apply a layer of wood glue or acrylic medium on the
+    transferred image
+
+<p float="left">
+  <img alt="arcyl transfer in progress" src=".images/Bild11_bau_acryl_transfer_vorlagen_aufgetragen.JPG" height=180>
+  <img alt="arcyl transfer removal of paper" src=".images/Bild12_bau_acryl_transfer_papier_entfernen.JPG" height=180>
+  <img alt="arcyl transfer result" src=".images/Bild13_carl_artwork1.JPG" height=180>
+</p>
 
 ## Build the firmware
 
@@ -132,6 +272,14 @@ commands correspond to the different drivers for the DFPlayerMini module that
 can be used: `DFRobot`, `Makuna` and `PowerBroker2`. Test the different drivers
 in case you have problems getting your module running. When building with
 the Arduino IDE, the PowerBroker2 driver is used by default.
+
+### Connecting the USB-to-Serial adapter
+
+Since the Arduino Pro Mini has no USB port, we need to connect an USB-to-Serial
+adapter to flash the Arduino:
+
+<img src=".images/Bild15_carl_flashing.PNG" height=250>
+
 
 ## References
 
