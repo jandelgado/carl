@@ -17,13 +17,15 @@ Carl was featured in the German edition of the Make Magazine in August 2021:
 * [Hardware](#hardware)
     * [Bill of Material](#bill-of-material)
         * [Note on DFPlayer Mini Modules](#note-on-dfplayer-mini-modules)
+    * [Notes on the assembly](#notes-on-the-assembly)
     * [Circuit](#circuit)
         * [Buttons](#buttons)
+            * [Calibration](#calibration)
         * [MP3 player module](#mp3-player-module)
         * [Amplification and volume control](#amplification-and-volume-control)
         * [Status LED](#status-led)
         * [Power supply](#power-supply)
-    * [Wiring details](#wiring-details)
+        * [Wiring details](#wiring-details)
     * [Construction of the case](#construction-of-the-case)
     * [Artwork](#artwork)
 * [Build the firmware](#build-the-firmware)
@@ -77,6 +79,33 @@ Besides the mentioned `GD3200B` model, there are more models out there which
 may be incompatible, see [this site for a testing tool and further
 information](https://github.com/ghmartin77/DFPlayerAnalyzer).
 
+### Notes on the assembly
+
+I recommend to first build and test the electronics, and if it's running, to 
+build the case and assemble everything. The electronics can be built and tested
+step-by-step:
+
+* Connect DFPlayer Mini to the Arduino
+* Connect the speaker to the DFPlayer
+* Connect the status-LED
+* Connect the volume control potentiometer
+* Flash the firmware
+* Connect the power bank
+* First test with the *virtual keyboard* and a testing SD-Card (see links)
+* Assemble and connect the keypad
+* Test and calibration of the keypad
+* Final test with a self-prepared SD-Card
+
+The first test is best done with Carl's *virtual keyboad* feature, which does
+not require the physical keypad. Carl is remote-controlled via the serial port
+per with simple key presses. For that to work, connect Carl using the serial
+console of the Arduino IDE with 9600 Baud. The keys `1` to `9` select a
+playlist, `p` is the play/pause/stop button and `+` and `-` skip songs forward
+or backward. Download a pre-populated SD-Card image from the [carl-testdata
+repository](https://github.com/jandelgado/carl-testdata) to start immediately.
+
+![SerialMonitor](.images/SerialMonitor.png)
+
 ### Circuit
 
 ![Schematic](.images/Bild03_schematic_handdrawn.PNG)
@@ -84,8 +113,8 @@ information](https://github.com/ghmartin77/DFPlayerAnalyzer).
 #### Buttons
 
 The 12 buttons are connected by a resistor network using only a single wire and
-an analog input of the Arduino. In contrast to a traditional wiring where every
-button is connected individually (12 inputs needed) or using a matrix (3+4
+an analog input of the Arduino. In contrast to a traditional wiring, where every
+button is connected individually (12 inputs needed), or using a matrix (3+4
 inputs needed), this drastically simplifies wiring and resource usage on the
 micro controller. 
 
@@ -93,13 +122,54 @@ The principle is as follows: if no button is pressed, the circuit is grounded an
 no current flows. If a button is pressed, the circuit will become a voltage
 divider. Depending on which button is pressed, a different voltage is connected
 to the A2 analog GPIO of the Arduino. Carl uses the [AnalogMultiButton Library](
-https://github.com/dxinteractive/AnalogMultiButton) to control the buttons. 
+https://github.com/dxinteractive/AnalogMultiButton) to determine which button
+was pressed (by measuring the voltage):
 
 <p float="left">
-   <img alt="Button wiring schema" src=".images/Bild14_tastenschema.PNG" height=200>
-   <img alt="wiring detail" src=".images/carl_detail_playlist_taster_verdrahtung.JPG" height=200>
-   <img alt="push button wiring detail" src=".images/Bild06_carl_detail_verkabelung_skip_buttons.JPG" height=200>
+   <img alt="Button wiring schema" src=".images/Bild14_tastenschema.PNG" height=180>
+   <img alt="wiring detail" src=".images/carl_detail_playlist_taster_verdrahtung.JPG" height=180>
+   <img alt="push button wiring detail" src=".images/Bild06_carl_detail_verkabelung_skip_buttons.JPG" height=180>
 </p>
+
+##### Calibration
+
+The *AnalogMultiButton* Library used must me calibrated with the expected
+voltages. This is because we use a network of resistors, which have tolerances.
+The calibration is done by connecting the keypad to the Arduino and running a simple
+calibration sketch, which measures the voltage for each key-press:
+
+```c++
+constexpr auto PIN_BUTTONS = A2;
+
+void setup() {
+    pinMode(PIN_BUTTONS, INPUT);
+    Serial.begin(9600);
+}
+
+void loop(){
+    Serial.println(analogRead(PIN_BUTTONS));
+    delay(50);
+}
+```
+
+The sketch must be compiled in the Arduino IDE. Afterwards upload it to the 
+Arduino and open the serial monitor of the Arduino IDE. Press the buttons in
+the order of connection, starting with the `PREV SONG` button, and write 
+down the resulting values (voltages). These values must then be configured in the
+`button_values_[]` array of the [keypad.h](carl/keypad.h) source file, like e.g.:
+
+```c++
+// excerpt from keypad.h
+static constexpr int button_values_[] = {
+      ...
+      // add your measured 12 values here
+      323, 344, 369, 398, 431, 470,
+      517, 574, 645, 736, 857, 1023
+};
+```
+
+In the example the butons were pressed in the order of connection and the 
+values `323`, `344`, `369` etc. were determined using the calibration script.
 
 #### MP3 player module
 
@@ -112,6 +182,8 @@ which is fed back into the Arduino to monitor, when playback in the module is
 active.
 
 <img alt="DFPlayerMini pinout" src=".images/DFPlayerMini.png" height=250>
+
+(See my Arduino page [for an evaluation of different MP3 modules](https://github.com/jandelgado/arduino/blob/b1bb1a1546428236d478bec674c78952836e2a1d/README.md))
 
 #### Amplification and volume control
 
@@ -142,13 +214,15 @@ charge Carl with an off-the-shelf USB charger.
 
 <img alt="connecting the usb power bank" src=".images/carl_stromversorgung.png">
 
-### Wiring details
+#### Wiring details
 
-Inner view of Carl and the stripboard with the Arduino and DFPlayer Mini
+Inner view of Carl and the stripboard with the Arduino and DFPlayer Mini with
+the USB-to-Serial adapter used for flashing the Arduino connected.
 
 <p float="left">
-    <img alt="inner view" src=".images/Bild10_carl_innen_full3.JPG" height=250>
-    <img alt="stripboard" src=".images/Bild07_bau_lochrasterplatine_mit_arduino_und_dfplayer.JPG" height=250>
+    <img alt="inner view" src=".images/Bild10_carl_innen_full3.JPG" height=180>
+    <img alt="stripboard" src=".images/Bild07_bau_lochrasterplatine_mit_arduino_und_dfplayer.JPG" height=180>
+    <img alt="push button wiring detail" src=".images/bau_lochrasterplatine_rueckseite.JPG" height=180>
 </p>
 
 ### Construction of the case
@@ -166,11 +240,21 @@ big arcade buttons were drilled using an 1-inch forstner drill.
   <img alt="case" src=".images/bau_einpassen_tastenfeld.JPG" height=200>
 </p>
 
+Details of the key panel for the playlist selection with 9 momentary buttons:
+
 <p float="left">
-    <img alt="" src=".images/bau_blech_fuer_tastenfeld.JPG" height=150>
-    <img alt="" src=".images/bau_schablone_tastenfeld.JPG" height=150>
-    <img alt="" src=".images/bau_blech_tastenfeld_mit_bohrungen.JPG" height=150>
-    <img alt="" src=".images/bau_tastenfeld_vorderseite.JPG" height=150>
+    <img alt="" src=".images/bau_blech_fuer_tastenfeld.JPG" height=130>
+    <img alt="" src=".images/bau_schablone_tastenfeld.JPG" height=130>
+    <img alt="" src=".images/bau_blech_tastenfeld_mit_bohrungen.JPG" height=130>
+    <img alt="" src=".images/bau_tastenfeld_vorderseite.JPG" height=130>
+</p>
+
+Details of the back cover plate, which is mounted with 2 screws that can be 
+removed easily without any tools:
+
+<p float="left">
+    <img alt="detail of the back cover" src=".images/carl_rueckseite1.JPG"i height=200>
+    <img alt="detail of the back cover plate mount" src=".images/Bild08_carl_detail_befestigung_deckel.JPG" height=200>
 </p>
 
 ### Artwork
