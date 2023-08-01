@@ -6,4 +6,4 @@ carl/carl.h-nano
 .gcc-flags.json
 *~
 *.bak
-
+carl/config.h-local

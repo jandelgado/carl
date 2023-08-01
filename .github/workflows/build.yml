@@ -29,7 +29,7 @@ jobs:
 
     - name: install platformio
       run: |
-        pip install platformio==5.1.1
+        pip install platformio==6.1.9
 
     - name: build calibrate firmware
       run: |
