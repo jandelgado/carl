@@ -16,12 +16,12 @@ Carl was featured in the German edition of the Make Magazine in August 2021:
 
 * [Hardware](#hardware)
     * [Bill of Material](#bill-of-material)
-        * [Note on DFPlayer Mini Modules](#note-on-dfplayer-mini-modules)
     * [Notes on the assembly](#notes-on-the-assembly)
     * [Circuit](#circuit)
         * [Buttons](#buttons)
             * [Calibration](#calibration)
         * [MP3 player module](#mp3-player-module)
+            * [Note on DFPlayer Mini Modules](#note-on-dfplayer-mini-modules)
         * [Amplification and volume control](#amplification-and-volume-control)
         * [Status LED](#status-led)
         * [Power supply](#power-supply)
@@ -56,28 +56,6 @@ Carl was featured in the German edition of the Make Magazine in August 2021:
   * 1 LED + Resistor (220 Ohms)
   * Resistors (1x500, 11x100, 1x1K) Ohms
   * cables, screws, glue, metal plates
-
-#### Note on DFPlayer Mini Modules
-
-During the tests of Carl, we encountered different DFPlayer Mini modules, which
-turned out to behave differently. DFPlayer's with the `GD3200B` chip for example
-were found ~~**not** to work with any of the available libraries~~ to only work
-in a quirks mode.
-
-The differences can easily be spotted and are described below.
-
-| Working                                                 | ~~Not Working~~ Working with Quirks                    |
-|---------------------------------------------------------|--------------------------------------------------------|
-| 24 pins, labeled `AA20HFJ648-94`                       | 16 pins, labeled `GD3200B`                            |
-| <img src=".images/dfplayer_mini_good.jpg" height="200"> | <img src=".images/dfplayer_mini_bad.jpg" height="200"> |
-
-The DFPlayerMini with the `GD3200B` failed reporting correctly the number of
-songs per folder. A Quirks mode is provided, to get these modules work with
-Carl.
-
-Besides the mentioned `GD3200B` model, there are more models out there which
-may be incompatible, see [this site for a testing tool and further
-information](https://github.com/ghmartin77/DFPlayerAnalyzer).
 
 ### Notes on the assembly
 
@@ -184,6 +162,28 @@ active.
 <img alt="DFPlayerMini pinout" src=".images/DFPlayerMini.png" height=250>
 
 (See my Arduino page [for an evaluation of different MP3 modules](https://github.com/jandelgado/arduino/blob/b1bb1a1546428236d478bec674c78952836e2a1d/README.md))
+
+##### Note on DFPlayer Mini Modules
+
+During the tests of Carl, we encountered different DFPlayer Mini modules, which
+turned out to behave differently. DFPlayer's with the `GD3200B` chip for example
+were found ~~**not** to work with any of the available libraries~~ to only work
+in a quirks mode.
+
+The differences can easily be spotted and are described below.
+
+| Working                                                 | ~~Not Working~~ Working with Quirks                    |
+|---------------------------------------------------------|--------------------------------------------------------|
+| 24 pins, labeled `AA20HFJ648-94`                       | 16 pins, labeled `GD3200B`                            |
+| <img src=".images/dfplayer_mini_good.jpg" height="200"> | <img src=".images/dfplayer_mini_bad.jpg" height="200"> |
+
+The DFPlayerMini with the `GD3200B` failed reporting correctly the number of
+songs per folder. A Quirks mode is provided, to get these modules work with
+Carl.
+
+Besides the mentioned `GD3200B` model, there are more models out there which
+may be incompatible, see [this site for a testing tool and further
+information](https://github.com/ghmartin77/DFPlayerAnalyzer).
 
 #### Amplification and volume control
 
